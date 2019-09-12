@@ -19,6 +19,8 @@ export default class Filter extends Component {
     }
 
     render() {
+        const { filters } = this.props
+        console.log(filters)
         return (
             <div>
                 <div>

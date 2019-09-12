@@ -16,12 +16,12 @@ export default class Main extends Component {
             hookupCount: 0,
             onsiteCount: 0,
             filters: {
+                isAllBeds: false,
                 isOneBed: false,
                 isTwoBed: false,
                 isThreeBed: false,
                 iFourPlusBed: false,
                 isStudio: false,
-                isAllBeds: false,
                 isOnePlusBaths: false,
                 isTwoPlusBaths: false,
                 isThreePlusBaths: false,
@@ -41,9 +41,9 @@ export default class Main extends Component {
         }
     }
 
-    setFilter = (key, value) => {
-        return ({ ...this.state.filters, [key]: value })
-    }
+    setFilter = (key, value) => (
+        this.setState((state) => ({ ...state.filters, [key]: value }))
+    )
 
     componentDidMount() {
         const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
@@ -68,7 +68,7 @@ export default class Main extends Component {
     }
 
     render() {
-        // console.log(this.state.filters)
+        console.log(this.state.filters)
         return (
             <div>
                 <div className='navbar'>
