@@ -8,49 +8,23 @@ export default class Main extends Component {
         super(props)
         this.state = {
             propertyData: [],
-<<<<<<< HEAD
-            filters:{
-                bedfilter: 'isAllBeds',
-                bathFilte:'isAllBaths',
-                petFilter:'cat',
-                laundryFilter:'Apartment'
-=======
             filters: {
-                isAllBeds: false,
-                isOneBed: false,
-                isTwoBed: false,
-                isThreeBed: false,
-                iFourPlusBed: false,
-                isStudio: false,
-                isOnePlusBaths: false,
-                isTwoPlusBaths: false,
-                isThreePlusBaths: false,
-                isAllBath: false,
-                isDogs: false,
-                isCats: false,
-                isBothPets: false,
-                isApartments: false,
-                isCondos: false,
-                isHouse: false,
-                isTowmhomes: false,
-                isInUnit: false,
-                isHookups: false,
-                isOnSite: false,
->>>>>>> 60fc107758eaf3bad9c5f29008ac6bc1bb510b73
+                bedfilter: 'allbeds',
+                bathFilter: 'allbaths',
+                petFilter: 'cat',
+                laundryFilter: 'Apartment'
+
             }
         }
     }
 
-<<<<<<< HEAD
-    setFilter = ({key, value}) => (
-        this.setState((state) => ({ filters: {...state.filters, [key]: value }}))
-=======
     setFilter = ({ key, value }) => (
         this.setState((state) => ({ filters: { ...state.filters, [key]: value } }))
->>>>>>> 60fc107758eaf3bad9c5f29008ac6bc1bb510b73
     )
 
-    componentDidMount() {
+    getData(filterObject) {
+        const { bedfilter, bathFilter, petFilter } = filterObject
+        // console.log(typeof (bedfilter), bathFilter, petFilter)
         const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
         -121.88632860000001&lat=37.3382082&distance=100&userId=null`
         Axios({
@@ -62,14 +36,27 @@ export default class Main extends Component {
             },
         })
             .then(({ data: { data } }) => {
+                // console.log(data)
+                var filteredProperty = data.reduce((acc, property) => {
+                    if (bedfilter === 'allbeds') {
+                        acc.push(property)
+                    } else if (parseInt(bedfilter) === property.beds) {
+                        acc.push(property)
+                    }
+                    return acc
+                }, [])
+                console.log(filteredProperty)
                 this.setState({
-                    propertyData: data
+                    propertyData: filteredProperty
                 })
+
             })
     }
 
     handleClick = () => {
-        console.log(this.state.propertyData)
+        const { filters } = this.state
+        this.getData(filters);
+        // console.log(this.state.filters)
     }
 
     render() {
@@ -81,7 +68,6 @@ export default class Main extends Component {
                         <div className="dropdown-content">
                             <div>
                                 <Filter
-                                    bedFilter={this.state.beds}
                                     filters={this.state.filters}
                                     setFilter={this.setFilter}
                                 />
@@ -94,9 +80,9 @@ export default class Main extends Component {
                     </div>
                 </div>
                 <div className='mainarea'>
-                    {/* <button
+                    <button
                         onClick={this.handleClick}
-                    >Get Data</button> */}
+                    >Get Data</button>
                 </div>
 
             </div>
