@@ -1,20 +1,39 @@
 import React, { Component } from 'react';
-import { bedFilterObjects } from './filterObjects';
+import { bedFilterObjects, bathFilterObjects, petFilterObjects } from './filterObjects';
 
 
 export default class Filter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            bedSelectedOption: 'allbeds'
+            bedSelectionOption: 'allbeds',
+            bathSelectionOption:'allbaths',
+            petSelectionOption:"both"
         }
     }
 
-    handleChange = (e) => {
+    handleChange_Bed = (e) => {
+        const { value, name: key } = e.target
+        this.setState({
+            bedSelectionOption: value,
+        })
+        this.props.setFilter({ key, value })
+    }
+
+    handleChange_Bath= (e) => {
         const { value, name: key } = e.target
         console.log(key, value)
         this.setState({
-            bedSelectedOption: value
+            bathSelectionOption: value,
+        })
+        this.props.setFilter({ key, value })
+    }
+
+    handleChange_Pet= (e) => {
+        const { value, name: key } = e.target
+        console.log(key, value)
+        this.setState({
+            petSelectionOption: value,
         })
         this.props.setFilter({ key, value })
     }
@@ -30,8 +49,35 @@ export default class Filter extends Component {
                                 type="radio"
                                 name='bedfilter'
                                 value={obj.value}
-                                checked={this.state.bedSelectedOption === obj.value}
-                                onChange={this.handleChange}
+                                checked={this.state.bedSelectionOption === obj.value}
+                                onChange={this.handleChange_Bed}
+                            /> {obj.name}( )
+                    </label>
+                    ))
+                    }
+                    <h2>Baths</h2>
+                    {bathFilterObjects.map((obj) => (
+                        <label>
+                            <input
+                                type="radio"
+                                name='bathfilter'
+                                value={obj.value}
+                                checked={this.state.bathSelectionOption === obj.value}
+                                onChange={this.handleChange_Bath}
+                            /> {obj.name}( )
+                    </label>
+                    ))
+                    }
+
+                    <h2>Pets</h2>
+                    {petFilterObjects.map((obj) => (
+                        <label>
+                            <input
+                                type="radio"
+                                name='petfilter'
+                                value={obj.value}
+                                checked={this.state.petSelectionOption === obj.value}
+                                onChange={this.handleChange_Pet}
                             /> {obj.name}( )
                     </label>
                     ))

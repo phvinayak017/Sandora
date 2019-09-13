@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Axios from 'axios'
 import Filter from './Filter'
+import { bathFilterObjects } from './filterObjects'
 
 
 export default class Main extends Component {
@@ -36,11 +37,13 @@ export default class Main extends Component {
             },
         })
             .then(({ data: { data } }) => {
-                // console.log(data)
+                 console.log(data)
                 var filteredProperty = data.reduce((acc, property) => {
-                    if (bedfilter === 'allbeds') {
+                     console.log(property.pets_allowed)
+                    if (bedfilter === 'allbeds' && parseInt(bathFilter) === property.bath && petFilter === property.pets_allowed) {
                         acc.push(property)
-                    } else if (parseInt(bedfilter) === property.beds) {
+                    } 
+                    if (parseInt(bedfilter) === property.beds) {
                         acc.push(property)
                     }
                     return acc
