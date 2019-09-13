@@ -15,16 +15,11 @@ export default class Filter extends Component {
         this.setState({
             bedSelectedOption: key
         })
-        this.setFilter(key, value)
+        this.props.setFilter({ key, value })
     }
 
-    setFilter = (key, value) => (
-        this.setState((props) => ({ ...props.filters, [key]: value }))
-    )
-
     render() {
-        const { filters } = this.props
-        console.log(filters)
+        console.log(this.props.filters)
         return (
             <div>
                 <div>
