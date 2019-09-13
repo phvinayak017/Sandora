@@ -8,17 +8,46 @@ export default class Main extends Component {
         super(props)
         this.state = {
             propertyData: [],
+<<<<<<< HEAD
             filters:{
                 bedfilter: 'isAllBeds',
                 bathFilte:'isAllBaths',
                 petFilter:'cat',
                 laundryFilter:'Apartment'
+=======
+            filters: {
+                isAllBeds: false,
+                isOneBed: false,
+                isTwoBed: false,
+                isThreeBed: false,
+                iFourPlusBed: false,
+                isStudio: false,
+                isOnePlusBaths: false,
+                isTwoPlusBaths: false,
+                isThreePlusBaths: false,
+                isAllBath: false,
+                isDogs: false,
+                isCats: false,
+                isBothPets: false,
+                isApartments: false,
+                isCondos: false,
+                isHouse: false,
+                isTowmhomes: false,
+                isInUnit: false,
+                isHookups: false,
+                isOnSite: false,
+>>>>>>> 60fc107758eaf3bad9c5f29008ac6bc1bb510b73
             }
         }
     }
 
+<<<<<<< HEAD
     setFilter = ({key, value}) => (
         this.setState((state) => ({ filters: {...state.filters, [key]: value }}))
+=======
+    setFilter = ({ key, value }) => (
+        this.setState((state) => ({ filters: { ...state.filters, [key]: value } }))
+>>>>>>> 60fc107758eaf3bad9c5f29008ac6bc1bb510b73
     )
 
     componentDidMount() {
@@ -52,6 +81,7 @@ export default class Main extends Component {
                         <div className="dropdown-content">
                             <div>
                                 <Filter
+                                    bedFilter={this.state.beds}
                                     filters={this.state.filters}
                                     setFilter={this.setFilter}
                                 />
