@@ -10,17 +10,13 @@ export default class Filter extends Component {
     }
 
     handleChange = (e) => {
-        const { value: key, checked: value } = e.target
+        const { value, name:key } = e.target
         console.log(key, value)
         this.setState({
-            bedSelectedOption: key
+            bedSelectedOption: value
         })
-        this.setFilter(key, value)
+        this.props.setFilter({key, value})
     }
-
-    setFilter = (key, value) => (
-        this.setState((props) => ({ ...props.filters, [key]: value }))
-    )
 
     render() {
         const { filters } = this.props
@@ -32,6 +28,7 @@ export default class Filter extends Component {
                     <label>
                         <input
                             type="radio"
+                            name='bedfilter'
                             value="isAllBeds"
                             checked={this.state.bedSelectedOption === 'isAllBeds'}
                             onChange={this.handleChange}
@@ -40,6 +37,7 @@ export default class Filter extends Component {
                     <label>
                         <input
                             type="radio"
+                            name='bedfilter'
                             value="isOneBed"
                             checked={this.state.bedSelectedOption === 'isOneBed'}
                             onChange={this.handleChange}
@@ -48,6 +46,7 @@ export default class Filter extends Component {
                     <label>
                         <input
                             type="radio"
+                            name='bedfilter'
                             value="isTwoBed"
                             checked={this.state.bedSelectedOption === 'isTwoBed'}
                             onChange={this.handleChange}
@@ -58,6 +57,7 @@ export default class Filter extends Component {
                     <label>
                         <input
                             type="radio"
+                            name='bedfilter'
                             value="isStudio"
                             checked={this.state.bedSelectedOption === 'isStudio'}
                             onChange={this.handleChange}
@@ -66,6 +66,7 @@ export default class Filter extends Component {
                     <label>
                         <input
                             type="radio"
+                            name='bedfilter'
                             value="isThreeBed"
                             checked={this.state.bedSelectedOption === 'isThreeBed'}
                             onChange={this.handleChange}
@@ -74,6 +75,7 @@ export default class Filter extends Component {
                     <label>
                         <input
                             type="radio"
+                            name='bedfilter'
                             value="isFourPlusBed"
                             checked={this.state.bedSelectedOption === 'isFourPlusBed'}
                             onChange={this.handleChange}

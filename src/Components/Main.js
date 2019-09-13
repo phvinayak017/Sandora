@@ -8,41 +8,17 @@ export default class Main extends Component {
         super(props)
         this.state = {
             propertyData: [],
-            catCount: 0,
-            dogCount: 0,
-            bedCount: 0,
-            bathCount: 0,
-            unitCount: 0,
-            hookupCount: 0,
-            onsiteCount: 0,
-            filters: {
-                isAllBeds: false,
-                isOneBed: false,
-                isTwoBed: false,
-                isThreeBed: false,
-                iFourPlusBed: false,
-                isStudio: false,
-                isOnePlusBaths: false,
-                isTwoPlusBaths: false,
-                isThreePlusBaths: false,
-                isAllBath: false,
-                isDogs: false,
-                isCats: false,
-                isBothPets: false,
-                isApartments: false,
-                isCondos: false,
-                isHouse: false,
-                isTowmhomes: false,
-                isInUnit: false,
-                isHookups: false,
-                isOnSite: false,
+            filters:{
+                bedfilter: 'isAllBeds',
+                bathFilte:'isAllBaths',
+                petFilter:'cat',
+                laundryFilter:'Apartment'
             }
-
         }
     }
 
-    setFilter = (key, value) => (
-        this.setState((state) => ({ ...state.filters, [key]: value }))
+    setFilter = ({key, value}) => (
+        this.setState((state) => ({ filters: {...state.filters, [key]: value }}))
     )
 
     componentDidMount() {
@@ -68,7 +44,6 @@ export default class Main extends Component {
     }
 
     render() {
-        console.log(this.state.filters)
         return (
             <div>
                 <div className='navbar'>
