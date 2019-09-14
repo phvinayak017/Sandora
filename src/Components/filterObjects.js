@@ -1,5 +1,5 @@
 export const bedFilterObjects = [
-    { value: 'allbeds', name: 'All Beds' },
+    { value: 'ALLBEDS', name: 'All Beds' },
     { value: '1', name: 1 },
     { value: '2', name: 2 },
     { value: '3', name: 3 },
@@ -7,7 +7,7 @@ export const bedFilterObjects = [
 ]
 
 export const bathFilterObjects = [
-    { value: 'allbaths', name: 'All Baths' },
+    { value: 'ALLBATHS', name: 'All Baths' },
     { value: '1', name: 1 },
     { value: '1.5', name: 1.5 },
     { value: '2', name: 2 },
@@ -19,10 +19,17 @@ export const bathFilterObjects = [
 
 
 export const petFilterObjects = [
-    { value: 'both', name: 'Both' },
-    { value: 'cat', name: "Cat" },
-    { value: 'dog', name: "Dog" },
-   
-
+    { value: 'BOTH', name: 'Both' },
+    { value: 'CAT', name: "Cat" },
+    { value: 'DOG', name: "Dog" },
+    { value: 'NONE', name: 'None' },
 ]
 
+
+
+var people = {
+    name: 'Mike Smith',
+    mother: 'Jane Smith',
+    father: 'Harry Smith',
+    sister: 'Samantha Smith'
+}

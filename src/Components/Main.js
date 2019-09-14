@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Axios from 'axios'
 import Filter from './Filter'
-import { bathFilterObjects } from './filterObjects'
+import PropertyCard from './PropertyCard'
 
 
 export default class Main extends Component {
@@ -10,22 +10,19 @@ export default class Main extends Component {
         this.state = {
             propertyData: [],
             filters: {
-                bedfilter: 'allbeds',
-                bathFilter: 'allbaths',
-                petFilter: 'cat',
-                laundryFilter: 'Apartment'
-
+                bedFilter: 'ALLBEDS',
+                bathFilter: 'ALLBATHS',
+                petFilter: 'NONE',
+                laundryFilter: 'APT'
             }
         }
     }
 
-    setFilter = ({ key, value }) => (
-        this.setState((state) => ({ filters: { ...state.filters, [key]: value } }))
-    )
+    componentWillMount() {
+        this.getInitialData()
+    }
 
-    getData(filterObject) {
-        const { bedfilter, bathFilter, petFilter } = filterObject
-        // console.log(typeof (bedfilter), bathFilter, petFilter)
+    getInitialData() {
         const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
         -121.88632860000001&lat=37.3382082&distance=100&userId=null`
         Axios({
@@ -37,13 +34,46 @@ export default class Main extends Component {
             },
         })
             .then(({ data: { data } }) => {
-                 console.log(data)
+                console.log(data)
+                this.setState({
+                    propertyData: data
+                })
+            })
+    }
+
+    setFilter = ({ key, value }) => (
+        this.setState((state) => ({ filters: { ...state.filters, [key]: value } }))
+    )
+
+    getFilterData(filterObject) {
+        const { bedFilter, bathFilter, petFilter } = filterObject
+        console.log(bedFilter, bathFilter, petFilter)
+        const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
+        -121.88632860000001&lat=37.3382082&distance=100&userId=null`
+        Axios({
+            url,
+            method: "get",
+            auth: {
+                username: 'testuser',
+                password: 'testpassword'
+            },
+        })
+            .then(({ data: { data } }) => {
                 var filteredProperty = data.reduce((acc, property) => {
-                     console.log(property.pets_allowed)
-                    if (bedfilter === 'allbeds' && parseInt(bathFilter) === property.bath && petFilter === property.pets_allowed) {
+                    // console.log(property.pets_allowed)
+                    if (bedFilter === 'allbeds' && parseInt(bathFilter) == property.bath
+                        && (petFilter === property.pets_allowed || petFilter === null)) {
                         acc.push(property)
-                    } 
-                    if (parseInt(bedfilter) === property.beds) {
+                    }
+                    else if (bathFilter === 'allbaths' && parseInt(bedFilter) === property.beds
+                        && (petFilter === property.pets_allowed || petFilter === null)) {
+                        acc.push(property)
+                    }
+                    else if (bathFilter === 'allbaths' && bedFilter === 'allbeds'
+                        && (petFilter === property.pets_allowed || petFilter === null)) {
+                        acc.push(property)
+                    } else if (parseInt(bedFilter) === property.beds && parseFloat(bathFilter) == property.bath
+                        && (petFilter === property.pets_allowed || petFilter === null)) {
                         acc.push(property)
                     }
                     return acc
@@ -58,11 +88,12 @@ export default class Main extends Component {
 
     handleClick = () => {
         const { filters } = this.state
-        this.getData(filters);
-        // console.log(this.state.filters)
+        this.getFilterData(filters);
+        // console.log(filters)
     }
 
     render() {
+        const { propertyData } = this.state
         return (
             <div>
                 <div className='navbar'>
@@ -74,6 +105,7 @@ export default class Main extends Component {
                                     filters={this.state.filters}
                                     setFilter={this.setFilter}
                                 />
+
                             </div>
                             <div className="filter-bottom ">
                                 <button className="btn-clear">Clear</button>
@@ -86,6 +118,17 @@ export default class Main extends Component {
                     <button
                         onClick={this.handleClick}
                     >Get Data</button>
+                    {
+                        propertyData.map((property) => (
+                            <PropertyCard
+                                address={property.address}
+                                propertyType={property.property_type}
+                                Beds={property.beds}
+                                Price={property.price}
+                            />
+                        ))
+                    }
+
                 </div>
 
             </div>

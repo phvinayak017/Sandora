@@ -6,32 +6,33 @@ export default class Filter extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            bedSelectionOption: 'allbeds',
-            bathSelectionOption:'allbaths',
-            petSelectionOption:"both"
+            bedSelectionOption: 'ALLBEDS',
+            bathSelectionOption: 'ALLBATHS',
+            petSelectionOption: "NONE"
         }
     }
 
     handleChange_Bed = (e) => {
         const { value, name: key } = e.target
+        // console.log(key, value)
         this.setState({
             bedSelectionOption: value,
         })
         this.props.setFilter({ key, value })
     }
 
-    handleChange_Bath= (e) => {
+    handleChange_Bath = (e) => {
         const { value, name: key } = e.target
-        console.log(key, value)
+        // console.log(key, value)
         this.setState({
             bathSelectionOption: value,
         })
         this.props.setFilter({ key, value })
     }
 
-    handleChange_Pet= (e) => {
+    handleChange_Pet = (e) => {
         const { value, name: key } = e.target
-        console.log(key, value)
+        // console.log(key, value)
         this.setState({
             petSelectionOption: value,
         })
@@ -47,7 +48,7 @@ export default class Filter extends Component {
                         <label>
                             <input
                                 type="radio"
-                                name='bedfilter'
+                                name='bedFilter'
                                 value={obj.value}
                                 checked={this.state.bedSelectionOption === obj.value}
                                 onChange={this.handleChange_Bed}
@@ -60,7 +61,7 @@ export default class Filter extends Component {
                         <label>
                             <input
                                 type="radio"
-                                name='bathfilter'
+                                name='bathFilter'
                                 value={obj.value}
                                 checked={this.state.bathSelectionOption === obj.value}
                                 onChange={this.handleChange_Bath}
@@ -74,7 +75,7 @@ export default class Filter extends Component {
                         <label>
                             <input
                                 type="radio"
-                                name='petfilter'
+                                name='petFilter'
                                 value={obj.value}
                                 checked={this.state.petSelectionOption === obj.value}
                                 onChange={this.handleChange_Pet}
