@@ -9,8 +9,11 @@ function PropertyCard(props) {
                     <h4><b>Appartment Name</b></h4>
                     <p>{props.address}</p>
                     <p>{props.propertyType}</p>
-                    <p>{props.Beds}</p>
-                    <p>{props.Price}</p>
+                    <span>
+                        <p>{props.Beds} - Beds</p>
+                        <p>{props.Baths} - Bath</p>
+                        <p>{props.Price} $</p>
+                    </span>
                     <div>
                         <button>Email</button>
                         <button>Phone Number</button><br />

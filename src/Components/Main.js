@@ -61,15 +61,15 @@ export default class Main extends Component {
             .then(({ data: { data } }) => {
                 var filteredProperty = data.reduce((acc, property) => {
                     // console.log(property.pets_allowed)
-                    if (bedFilter === 'allbeds' && parseInt(bathFilter) == property.bath
+                    if (bedFilter === 'ALLBEDS' && parseInt(bathFilter) == property.bath
                         && (petFilter === property.pets_allowed || petFilter === null)) {
                         acc.push(property)
                     }
-                    else if (bathFilter === 'allbaths' && parseInt(bedFilter) === property.beds
+                    else if (bathFilter === 'ALLBATHS' && parseInt(bedFilter) === property.beds
                         && (petFilter === property.pets_allowed || petFilter === null)) {
                         acc.push(property)
                     }
-                    else if (bathFilter === 'allbaths' && bedFilter === 'allbeds'
+                    else if (bathFilter === 'ALLBATHS' && bedFilter === 'ALLBEDS'
                         && (petFilter === property.pets_allowed || petFilter === null)) {
                         acc.push(property)
                     } else if (parseInt(bedFilter) === property.beds && parseFloat(bathFilter) == property.bath
@@ -124,6 +124,7 @@ export default class Main extends Component {
                                 address={property.address}
                                 propertyType={property.property_type}
                                 Beds={property.beds}
+                                Baths={property.bath}
                                 Price={property.price}
                             />
                         ))
