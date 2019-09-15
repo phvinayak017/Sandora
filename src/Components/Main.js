@@ -10,10 +10,11 @@ export default class Main extends Component {
         this.state = {
             propertyData: [],
             filters: {
-                bedFilter: 'ALLBEDS',
-                bathFilter: 'ALLBATHS',
-                petFilter: 'NONE',
-                laundryFilter: 'APT'
+                bedFilter: '',
+                bathFilter: '',
+                petFilter: '',
+                laundryFilter: '',
+                styleFilter: ''
             }
         }
     }
@@ -46,7 +47,7 @@ export default class Main extends Component {
     )
 
     getFilterData(filterObject) {
-        const { bedFilter, bathFilter, petFilter } = filterObject
+        const { bedFilter, bathFilter, petFilter, laundryFilter, styleFilter } = filterObject
         console.log(bedFilter, bathFilter, petFilter)
         const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
         -121.88632860000001&lat=37.3382082&distance=100&userId=null`
@@ -61,19 +62,26 @@ export default class Main extends Component {
             .then(({ data: { data } }) => {
                 var filteredProperty = data.reduce((acc, property) => {
                     // console.log(property.pets_allowed)
+                    // console.log(property.laundry)
+                    console.log(property.property_type)
+
                     if (bedFilter === 'ALLBEDS' && parseInt(bathFilter) == property.bath
-                        && (petFilter === property.pets_allowed || petFilter === null)) {
+                        && (petFilter === property.pets_allowed || petFilter === null)
+                        && laundryFilter === property.laundry && styleFilter === property.property_type) {
                         acc.push(property)
                     }
                     else if (bathFilter === 'ALLBATHS' && parseInt(bedFilter) === property.beds
-                        && (petFilter === property.pets_allowed || petFilter === null)) {
+                        && (petFilter === property.pets_allowed || petFilter === null)
+                        && laundryFilter === property.laundry && styleFilter === property.property_type) {
                         acc.push(property)
                     }
                     else if (bathFilter === 'ALLBATHS' && bedFilter === 'ALLBEDS'
-                        && (petFilter === property.pets_allowed || petFilter === null)) {
+                        && (petFilter === property.pets_allowed || petFilter === null)
+                        && laundryFilter === property.laundry && styleFilter === property.property_type) {
                         acc.push(property)
                     } else if (parseInt(bedFilter) === property.beds && parseFloat(bathFilter) == property.bath
-                        && (petFilter === property.pets_allowed || petFilter === null)) {
+                        && (petFilter === property.pets_allowed || petFilter === null)
+                        && laundryFilter === property.laundry && styleFilter === property.property_type) {
                         acc.push(property)
                     }
                     return acc
@@ -86,16 +94,29 @@ export default class Main extends Component {
             })
     }
 
-    handleClick = () => {
+    handleDone = () => {
         const { filters } = this.state
         this.getFilterData(filters);
         // console.log(filters)
     }
 
+    handleClear = () => {
+        console.log("setstate to Null")
+        this.setState({
+            filters: {
+                bedFilter: '',
+                bathFilter: '',
+                petFilter: '',
+                laundryFilter: '',
+                styleFilter: ''
+            }
+        })
+        this.getInitialData()
+    }
     render() {
         const { propertyData } = this.state
         return (
-            <div>
+            <div className='container'>
                 <div className='navbar'>
                     <div className="dropdown">
                         <button className='btnfilter'>Filter</button>
@@ -105,34 +126,37 @@ export default class Main extends Component {
                                     filters={this.state.filters}
                                     setFilter={this.setFilter}
                                 />
-
                             </div>
                             <div className="filter-bottom ">
-                                <button className="btn-clear">Clear</button>
-                                <button className='btn-done'>Done</button>
+                                <button className="btn-clear" onClick={this.handleClear}>Clear</button>
+                                <button className='btn-done' onClick={this.handleDone}>Done</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className='mainarea'>
-                    <button
-                        onClick={this.handleClick}
-                    >Get Data</button>
-                    {
-                        propertyData.map((property) => (
-                            <PropertyCard
-                                address={property.address}
-                                propertyType={property.property_type}
-                                Beds={property.beds}
-                                Baths={property.bath}
-                                Price={property.price}
-                            />
-                        ))
-                    }
-
+                <div className='map'>
+                    <h2> Google Map Api</h2>
                 </div>
-
+                <div className='property'>
+                    <div className="cardContainer">
+                        {
+                            propertyData.map((property) => (
+                                <PropertyCard
+                                    Address={property.address}
+                                    PropertyType={property.property_type}
+                                    Laundry={property.laundry}
+                                    Beds={property.beds}
+                                    Baths={property.bath}
+                                    Pets={property.pets_allowed}
+                                    Price={property.price}
+                                />
+                            ))
+                        }
+                    </div>
+                </div>
             </div>
+
+
         )
     }
 }

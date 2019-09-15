@@ -20,16 +20,22 @@ export const bathFilterObjects = [
 
 export const petFilterObjects = [
     { value: 'BOTH', name: 'Both' },
-    { value: 'CAT', name: "Cat" },
-    { value: 'DOG', name: "Dog" },
+    { value: 'CAT', name: "Cats" },
+    { value: 'DOG', name: "Dogs" },
     { value: 'NONE', name: 'None' },
 ]
 
+export const laundryFilterObjects = [
+    { value: 'HOOKUP', name: 'Hookup' },
+    { value: 'IN-UNIT', name: "In-Unit" },
+    { value: 'SHARED', name: "Shared" },
+    { value: 'NONE', name: 'None' },
+]
 
+export const styleFilterObjects = [
+    { value: 'HOUSE', name: 'Houses' },
+    { value: 'TOWNHOME', name: "Townhouses" },
+    { value: 'APT', name: "Apartments" },
+    { value: 'CONDO', name: 'Condos' },
+]
 
-var people = {
-    name: 'Mike Smith',
-    mother: 'Jane Smith',
-    father: 'Harry Smith',
-    sister: 'Samantha Smith'
-}
