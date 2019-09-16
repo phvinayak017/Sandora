@@ -17,6 +17,8 @@ export default class Main extends Component {
                 petFilter: '',
                 laundryFilter: '',
                 styleFilter: '',
+                minPrice: "",
+                maxPrice: "",
 
             },
             filtersBoolean: {
@@ -25,6 +27,9 @@ export default class Main extends Component {
                 isPetFilterSelected: false,
                 isLaundryFilterSelected: false,
                 isStyleFilterSelected: false,
+                isMinPriceSelected: false,
+                isMaxPriceSelected: false,
+
             },
             open: false,
             isLoading: true,
@@ -65,6 +70,7 @@ export default class Main extends Component {
             },
         })
             .then(({ data: { data } }) => {
+                console.log(data)
                 this.setState({
                     propertyData: data,
                     isLoading: false
@@ -75,7 +81,7 @@ export default class Main extends Component {
     }
 
     getFilterData(filterObject) {
-        const { bedFilter, bathFilter, petFilter, laundryFilter, styleFilter } = filterObject
+        const { bedFilter, bathFilter, petFilter, laundryFilter, styleFilter, minPrice, maxPrice } = filterObject
         const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
             -121.88632860000001&lat=37.3382082&distance=100&userId=null`
         Axios({
@@ -90,21 +96,25 @@ export default class Main extends Component {
                 var filteredProperty = data.reduce((acc, property) => {
                     if (bedFilter === 'ALLBEDS' && parseInt(bathFilter) == property.bath
                         && (petFilter === property.pets_allowed || petFilter === null)
-                        && laundryFilter === property.laundry && styleFilter === property.property_type) {
+                        && laundryFilter === property.laundry && styleFilter === property.property_type
+                        && (property.price >= minPrice && property.price <= maxPrice)) {
                         acc.push(property)
                     }
                     else if (bathFilter === 'ALLBATHS' && parseInt(bedFilter) === property.beds
                         && (petFilter === property.pets_allowed || petFilter === null)
-                        && laundryFilter === property.laundry && styleFilter === property.property_type) {
+                        && laundryFilter === property.laundry && styleFilter === property.property_type
+                        && (property.price >= minPrice && property.price <= maxPrice)) {
                         acc.push(property)
                     }
                     else if (bathFilter === 'ALLBATHS' && bedFilter === 'ALLBEDS'
                         && (petFilter === property.pets_allowed || petFilter === null)
-                        && laundryFilter === property.laundry && styleFilter === property.property_type) {
+                        && laundryFilter === property.laundry && styleFilter === property.property_type
+                        && (property.price >= minPrice && property.price <= maxPrice)) {
                         acc.push(property)
                     } else if (parseInt(bedFilter) === property.beds && parseFloat(bathFilter) == property.bath
                         && (petFilter === property.pets_allowed || petFilter === null)
-                        && laundryFilter === property.laundry && styleFilter === property.property_type) {
+                        && laundryFilter === property.laundry && styleFilter === property.property_type
+                        && (property.price >= minPrice && property.price <= maxPrice)) {
                         acc.push(property)
                     }
                     return acc
@@ -124,8 +134,11 @@ export default class Main extends Component {
             isBathFilterSelected: isBath,
             isPetFilterSelected: isPet,
             isStyleFilterSelected: isStyle,
-            isLaundryFilterSelected: isLaundry } = this.state.filtersBoolean
-        if (isBed && isBath && isPet && isStyle && isLaundry) {
+            isLaundryFilterSelected: isLaundry,
+            isMinPriceSelected: isMin,
+            isMaxPriceSelected: isMax } = this.state.filtersBoolean
+
+        if (isBed && isBath && isPet && isStyle && isLaundry && isMin && isMax) {
             this.setState({ isLoading: true }, () => {
                 this.getFilterData(filters);
             })

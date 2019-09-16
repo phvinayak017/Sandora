@@ -11,7 +11,28 @@ export default class Filter extends Component {
             petSelectionOption: this.props.filters.petFilter,
             laundrySelectionOption: this.props.filters.laundryFilter,
             styleSelectionOption: this.props.filters.styleFilter,
+            minpriceRange: this.props.filters.minPrice,
+            maxpriceRange: this.props.filters.maxPrice,
+
         }
+    }
+
+    handleMinPrice = (e) => {
+        const { value, name: key } = e.target
+        this.setState({
+            minpriceRange: value,
+        })
+        this.props.setFilter({ key, value })
+        this.props.filtersBoolean.isMinPriceSelected = true
+    }
+
+    handleMaxPrice = (e) => {
+        const { value, name: key } = e.target
+        this.setState({
+            maxpriceRange: value,
+        })
+        this.props.setFilter({ key, value })
+        this.props.filtersBoolean.isMaxPriceSelected = true
     }
 
     handleChange_Bed = (e) => {
@@ -67,6 +88,8 @@ export default class Filter extends Component {
             petSelectionOption: this.props.filters.petFilter,
             laundrySelectionOption: this.props.filters.laundryFilter,
             styleSelectionOption: this.props.filters.styleFilter,
+            minpriceRange: this.props.filters.minPrice,
+            maxpriceRange: this.props.filters.maxPrice,
         })
     }
 
@@ -77,6 +100,8 @@ export default class Filter extends Component {
         this.props.filters.petFilter = ""
         this.props.filters.laundryFilter = ""
         this.props.filters.styleFilter = ""
+        this.props.filters.minPrice = ""
+        this.props.filters.maxPrice = ""
     }
 
     handleClick_Done = () => {
@@ -92,17 +117,19 @@ export default class Filter extends Component {
                     <input
                         type="number"
                         placeholder="Min Price"
-                        name="minprice"
+                        name="minPrice"
+                        value={this.state.minpriceRange}
                         min="0"
                         className="minPrice"
-                        onChangeMinPrice={this.handleMinPrice} />
+                        onChange={this.handleMinPrice} /> $ <span className="price">-</span>
                     <input
                         type="number"
                         placeholder="Max Price"
-                        name="maxprice"
+                        name="maxPrice"
+                        value={this.state.maxpriceRange}
                         min="0"
                         className="maxPrice"
-                        onChangeMaxPrice={this.handleMaxPrice} />
+                        onChange={this.handleMaxPrice} /> $
                 </div>
                 <div className='filterSelectionItems'>
                     <div>
