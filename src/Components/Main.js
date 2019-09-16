@@ -3,6 +3,7 @@ import Axios from 'axios'
 import Filter from './Filter'
 import PropertyCard from './PropertyCard'
 import uuid from 'uuid'
+import GoogleMaps from './GoogleMaps'
 
 
 
@@ -185,7 +186,8 @@ export default class Main extends Component {
                     </div>
                 </div>
                 <div className='map'>
-                    <h2> Google Map Api</h2>
+                    <GoogleMaps
+                        propertyData={propertyData} />
                 </div>
                 {isLoading ? <div className='loading'><h2>Loading...</h2></div> :
                     <div className='property'>
