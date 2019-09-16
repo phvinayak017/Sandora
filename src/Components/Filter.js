@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { bedFilterObjects, bathFilterObjects, petFilterObjects, laundryFilterObjects, styleFilterObjects } from './filterObjects';
-
+import uuid from 'uuid'
 
 export default class Filter extends Component {
     constructor(props) {
@@ -11,15 +11,18 @@ export default class Filter extends Component {
             petSelectionOption: this.props.filters.petFilter,
             laundrySelectionOption: this.props.filters.laundryFilter,
             styleSelectionOption: this.props.filters.styleFilter,
+
         }
     }
 
     handleChange_Bed = (e) => {
         const { value, name: key } = e.target
+
         this.setState({
             bedSelectionOption: value,
         })
         this.props.setFilter({ key, value })
+        this.props.filtersBoolean.isBedFilterSelected = true
     }
 
     handleChange_Bath = (e) => {
@@ -28,6 +31,7 @@ export default class Filter extends Component {
             bathSelectionOption: value,
         })
         this.props.setFilter({ key, value })
+        this.props.filtersBoolean.isBathFilterSelected = true
     }
 
     handleChange_Pet = (e) => {
@@ -36,6 +40,7 @@ export default class Filter extends Component {
             petSelectionOption: value,
         })
         this.props.setFilter({ key, value })
+        this.props.filtersBoolean.isPetFilterSelected = true
     }
 
     handleChange_Style = (e) => {
@@ -44,6 +49,7 @@ export default class Filter extends Component {
             styleSelectionOption: value,
         })
         this.props.setFilter({ key, value })
+        this.props.filtersBoolean.isStyleFilterSelected = true
     }
 
     handleChange_Laundry = (e) => {
@@ -52,6 +58,22 @@ export default class Filter extends Component {
             laundrySelectionOption: value,
         })
         this.props.setFilter({ key, value })
+        this.props.filtersBoolean.isLaundryFilterSelected = true
+    }
+
+    handleClick_Clear = () => {
+        this.props.handleClear()
+        this.setState({
+            bedSelectionOption: "",
+            bathSelectionOption: "",
+            petSelectionOption: "",
+            laundrySelectionOption: "",
+            styleSelectionOption: "",
+        })
+    }
+
+    handleClick_Done = () => {
+        this.props.handleDone()
     }
 
     render() {
@@ -61,7 +83,7 @@ export default class Filter extends Component {
                     <div>
                         <h2>Beds</h2>
                         {bedFilterObjects.map((obj) => (
-                            <label>
+                            <label key={uuid.v4()}>
                                 <input
                                     type="radio"
                                     name='bedFilter'
@@ -76,7 +98,7 @@ export default class Filter extends Component {
                     <div>
                         <h2>Baths</h2>
                         {bathFilterObjects.map((obj) => (
-                            <label>
+                            <label key={uuid.v4()}>
                                 <input
                                     type="radio"
                                     name='bathFilter'
@@ -91,7 +113,7 @@ export default class Filter extends Component {
                     <div>
                         <h2>Pets</h2>
                         {petFilterObjects.map((obj) => (
-                            <label>
+                            <label key={uuid.v4()}>
                                 <input
                                     type="radio"
                                     name='petFilter'
@@ -107,7 +129,7 @@ export default class Filter extends Component {
                     <div>
                         <h2>Style</h2>
                         {styleFilterObjects.map((obj) => (
-                            <label>
+                            <label key={uuid.v4()}>
                                 <input
                                     type="radio"
                                     name='styleFilter'
@@ -122,7 +144,7 @@ export default class Filter extends Component {
                     <div>
                         <h2>Laundry</h2>
                         {laundryFilterObjects.map((obj) => (
-                            <label>
+                            <label key={uuid.v4()}>
                                 <input
                                     type="radio"
                                     name='laundryFilter'
@@ -134,6 +156,10 @@ export default class Filter extends Component {
                         ))
                         }
                     </div>
+                </div>
+                <div className="filter-bottom ">
+                    <button className="btn-clear" onClick={this.handleClick_Clear}>Clear</button>
+                    <button className='btn-done' onClick={this.handleClick_Done}>Done</button>
                 </div>
             </div>
 

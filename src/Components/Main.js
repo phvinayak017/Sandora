@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Axios from 'axios'
 import Filter from './Filter'
 import PropertyCard from './PropertyCard'
+import uuid from 'uuid'
+
 
 
 export default class Main extends Component {
@@ -10,17 +12,36 @@ export default class Main extends Component {
         this.state = {
             propertyData: [],
             filters: {
-                bedFilter: '',
+                bedFilter: 'asdfdsf',
                 bathFilter: '',
                 petFilter: '',
                 laundryFilter: '',
-                styleFilter: ''
-            }
+                styleFilter: '',
+
+            },
+            filtersBoolean: {
+                isBedFilterSelected: false,
+                isBathFilterSelected: false,
+                isPetFilterSelected: false,
+                isLaundryFilterSelected: false,
+                isStyleFilterSelected: false,
+            },
+            open: false,
         }
+    }
+    container = React.createRef();
+
+    setFilter = ({ key, value }, bool) => (
+        this.setState((state) => ({ filters: { ...state.filters, [key]: value } }))
+    )
+
+    componentDidMount() {
+        document.addEventListener("mousedown", this.handleClickOutside);
     }
 
     componentWillMount() {
         this.getInitialData()
+        document.removeEventListener("mousedown", this.handleClickOutside);
     }
 
     getInitialData() {
@@ -35,20 +56,16 @@ export default class Main extends Component {
             },
         })
             .then(({ data: { data } }) => {
-                console.log(data)
+                // console.log(data)
                 this.setState({
                     propertyData: data
                 })
             })
     }
 
-    setFilter = ({ key, value }) => (
-        this.setState((state) => ({ filters: { ...state.filters, [key]: value } }))
-    )
-
     getFilterData(filterObject) {
         const { bedFilter, bathFilter, petFilter, laundryFilter, styleFilter } = filterObject
-        console.log(bedFilter, bathFilter, petFilter)
+        // console.log(bedFilter, bathFilter, petFilter)
         const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
         -121.88632860000001&lat=37.3382082&distance=100&userId=null`
         Axios({
@@ -96,42 +113,54 @@ export default class Main extends Component {
 
     handleDone = () => {
         const { filters } = this.state
-        this.getFilterData(filters);
+        const { isBedFilterSelected: isBed,
+            isBathFilterSelected: isBath,
+            isPetFilterSelected: isPet,
+            isStyleFilterSelected: isStyle,
+            isLaundryFilterSelected: isLaundry } = this.state.filtersBoolean
+
+        if (isBed && isBath && isPet && isStyle && isLaundry) {
+            this.getFilterData(filters);
+        }
+        this.setState({
+            open: !this.state.open
+        })
         // console.log(filters)
     }
 
     handleClear = () => {
-        console.log("setstate to Null")
-        this.setState({
-            filters: {
-                bedFilter: '',
-                bathFilter: '',
-                petFilter: '',
-                laundryFilter: '',
-                styleFilter: ''
-            }
-        })
+        // console.log("setstate to Null")
         this.getInitialData()
     }
+
+    handleFilterButton = () => {
+        // console.log('filter button')
+        this.setState({
+            open: !this.state.open
+        })
+    }
+
     render() {
-        const { propertyData } = this.state
+        const { propertyData, open } = this.state
+        console.log(this.state.filtersBoolean)
         return (
             <div className='container'>
                 <div className='navbar'>
-                    <div className="dropdown">
-                        <button className='btnfilter'>Filter</button>
-                        <div className="dropdown-content">
-                            <div>
-                                <Filter
-                                    filters={this.state.filters}
-                                    setFilter={this.setFilter}
-                                />
-                            </div>
-                            <div className="filter-bottom ">
-                                <button className="btn-clear" onClick={this.handleClear}>Clear</button>
-                                <button className='btn-done' onClick={this.handleDone}>Done</button>
-                            </div>
-                        </div>
+                    <div className="dropdown" ref={this.container}>
+                        <button className='btnfilter' onClick={this.handleFilterButton}>Filter</button>
+                        {open && (
+                            <div className="dropdown-content">
+                                <div>
+                                    <Filter
+                                        filtersBoolean={this.state.filtersBoolean}
+                                        filters={this.state.filters}
+                                        setFilter={this.setFilter}
+                                        handleClear={this.handleClear}
+                                        handleDone={this.handleDone}
+                                    />
+                                </div>
+
+                            </div>)}
                     </div>
                 </div>
                 <div className='map'>
@@ -142,6 +171,7 @@ export default class Main extends Component {
                         {
                             propertyData.map((property) => (
                                 <PropertyCard
+                                    key={uuid.v4()}
                                     Address={property.address}
                                     PropertyType={property.property_type}
                                     Laundry={property.laundry}
@@ -155,8 +185,6 @@ export default class Main extends Component {
                     </div>
                 </div>
             </div>
-
-
         )
     }
 }
