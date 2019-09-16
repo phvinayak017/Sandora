@@ -12,7 +12,7 @@ export default class Main extends Component {
         this.state = {
             propertyData: [],
             filters: {
-                bedFilter: 'asdfdsf',
+                bedFilter: '',
                 bathFilter: '',
                 petFilter: '',
                 laundryFilter: '',
@@ -27,13 +27,18 @@ export default class Main extends Component {
                 isStyleFilterSelected: false,
             },
             open: false,
+            isLoading: true,
         }
     }
     container = React.createRef();
 
-    setFilter = ({ key, value }, bool) => (
-        this.setState((state) => ({ filters: { ...state.filters, [key]: value } }))
-    )
+    handleClickOutside = (e) => {
+        if (this.container.current && (!this.container.current.contains(e.target))) {
+            this.setState({
+                open: false
+            })
+        }
+    }
 
     componentDidMount() {
         document.addEventListener("mousedown", this.handleClickOutside);
@@ -44,9 +49,13 @@ export default class Main extends Component {
         document.removeEventListener("mousedown", this.handleClickOutside);
     }
 
+    setFilter = ({ key, value }, bool) => (
+        this.setState((state) => ({ filters: { ...state.filters, [key]: value } }))
+    )
+
     getInitialData() {
         const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
-        -121.88632860000001&lat=37.3382082&distance=100&userId=null`
+                        -121.88632860000001&lat=37.3382082&distance=100&userId=null`
         Axios({
             url,
             method: "get",
@@ -56,18 +65,19 @@ export default class Main extends Component {
             },
         })
             .then(({ data: { data } }) => {
-                // console.log(data)
                 this.setState({
-                    propertyData: data
+                    propertyData: data,
+                    isLoading: false
                 })
             })
+
+
     }
 
     getFilterData(filterObject) {
         const { bedFilter, bathFilter, petFilter, laundryFilter, styleFilter } = filterObject
-        // console.log(bedFilter, bathFilter, petFilter)
         const url = `https://sandoratest-service.herokuapp.com/api/property/quickView?long=
-        -121.88632860000001&lat=37.3382082&distance=100&userId=null`
+            -121.88632860000001&lat=37.3382082&distance=100&userId=null`
         Axios({
             url,
             method: "get",
@@ -78,10 +88,6 @@ export default class Main extends Component {
         })
             .then(({ data: { data } }) => {
                 var filteredProperty = data.reduce((acc, property) => {
-                    // console.log(property.pets_allowed)
-                    // console.log(property.laundry)
-                    console.log(property.property_type)
-
                     if (bedFilter === 'ALLBEDS' && parseInt(bathFilter) == property.bath
                         && (petFilter === property.pets_allowed || petFilter === null)
                         && laundryFilter === property.laundry && styleFilter === property.property_type) {
@@ -103,46 +109,48 @@ export default class Main extends Component {
                     }
                     return acc
                 }, [])
-                console.log(filteredProperty)
                 this.setState({
-                    propertyData: filteredProperty
+                    propertyData: filteredProperty,
+                    isLoading: false
                 })
-
             })
+
     }
 
     handleDone = () => {
         const { filters } = this.state
-        const { isBedFilterSelected: isBed,
+        const {
+            isBedFilterSelected: isBed,
             isBathFilterSelected: isBath,
             isPetFilterSelected: isPet,
             isStyleFilterSelected: isStyle,
             isLaundryFilterSelected: isLaundry } = this.state.filtersBoolean
-
         if (isBed && isBath && isPet && isStyle && isLaundry) {
-            this.getFilterData(filters);
+            this.setState({ isLoading: true }, () => {
+                this.getFilterData(filters);
+            })
         }
         this.setState({
             open: !this.state.open
         })
-        // console.log(filters)
     }
 
     handleClear = () => {
-        // console.log("setstate to Null")
-        this.getInitialData()
+        this.setState({ isLoading: true }, () => {
+            this.getInitialData()
+        })
+
     }
 
     handleFilterButton = () => {
-        // console.log('filter button')
         this.setState({
             open: !this.state.open
         })
     }
 
     render() {
-        const { propertyData, open } = this.state
-        console.log(this.state.filtersBoolean)
+        const { propertyData, open, isLoading } = this.state
+        // console.log(isLoading)
         return (
             <div className='container'>
                 <div className='navbar'>
@@ -166,24 +174,25 @@ export default class Main extends Component {
                 <div className='map'>
                     <h2> Google Map Api</h2>
                 </div>
-                <div className='property'>
-                    <div className="cardContainer">
-                        {
-                            propertyData.map((property) => (
-                                <PropertyCard
-                                    key={uuid.v4()}
-                                    Address={property.address}
-                                    PropertyType={property.property_type}
-                                    Laundry={property.laundry}
-                                    Beds={property.beds}
-                                    Baths={property.bath}
-                                    Pets={property.pets_allowed}
-                                    Price={property.price}
-                                />
-                            ))
-                        }
-                    </div>
-                </div>
+                {isLoading ? <div className='loading'><h2>Loading...</h2></div> :
+                    <div className='property'>
+                        <div className="cardContainer">
+                            {
+                                propertyData.map((property) => (
+                                    <PropertyCard
+                                        key={uuid.v4()}
+                                        Address={property.address}
+                                        PropertyType={property.property_type}
+                                        Laundry={property.laundry}
+                                        Beds={property.beds}
+                                        Baths={property.bath}
+                                        Pets={property.pets_allowed}
+                                        Price={property.price}
+                                    />
+                                ))
+                            }
+                        </div>
+                    </div>}
             </div>
         )
     }

@@ -11,7 +11,6 @@ export default class Filter extends Component {
             petSelectionOption: this.props.filters.petFilter,
             laundrySelectionOption: this.props.filters.laundryFilter,
             styleSelectionOption: this.props.filters.styleFilter,
-
         }
     }
 
@@ -61,24 +60,50 @@ export default class Filter extends Component {
         this.props.filtersBoolean.isLaundryFilterSelected = true
     }
 
+    handleState() {
+        this.setState({
+            bedSelectionOption: this.props.filters.bedFilter,
+            bathSelectionOption: this.props.filters.bathFilter,
+            petSelectionOption: this.props.filters.petFilter,
+            laundrySelectionOption: this.props.filters.laundryFilter,
+            styleSelectionOption: this.props.filters.styleFilter,
+        })
+    }
+
     handleClick_Clear = () => {
         this.props.handleClear()
-        this.setState({
-            bedSelectionOption: "",
-            bathSelectionOption: "",
-            petSelectionOption: "",
-            laundrySelectionOption: "",
-            styleSelectionOption: "",
-        })
+        this.props.filters.bedFilter = ""
+        this.props.filters.bathFilter = ""
+        this.props.filters.petFilter = ""
+        this.props.filters.laundryFilter = ""
+        this.props.filters.styleFilter = ""
     }
 
     handleClick_Done = () => {
         this.props.handleDone()
+        this.handleState()
     }
 
     render() {
         return (
             <div>
+                <div className='priceFilter'>
+                    <h2>Price</h2>
+                    <input
+                        type="number"
+                        placeholder="Min Price"
+                        name="minprice"
+                        min="0"
+                        className="minPrice"
+                        onChangeMinPrice={this.handleMinPrice} />
+                    <input
+                        type="number"
+                        placeholder="Max Price"
+                        name="maxprice"
+                        min="0"
+                        className="maxPrice"
+                        onChangeMaxPrice={this.handleMaxPrice} />
+                </div>
                 <div className='filterSelectionItems'>
                     <div>
                         <h2>Beds</h2>
@@ -125,7 +150,6 @@ export default class Filter extends Component {
                         ))
                         }
                     </div>
-
                     <div>
                         <h2>Style</h2>
                         {styleFilterObjects.map((obj) => (
