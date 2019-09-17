@@ -30,5 +30,5 @@ function GoogleMaps(props) {
 }
 
 export default GoogleApiWrapper({
-    apiKey: "AIzaSyDmHmoc4GXerVgX5NbV2CjSM-1LnFV6OhE"
+    apiKey: "AIzaSyCUVO7gg7Ebh1Gc48SL2zoZ7pGB_PXs91E"
 })(GoogleMaps);
